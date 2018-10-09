@@ -7,13 +7,16 @@ v1 - number of genes
 v2 - number of wells
 v3 - proportion of a library as number of genes/well
 v4 - number of genes in pathway
+v5 - number of iterations in bootstrap
+
 
 Constants:
-
 c1 - standard deviation (0.15 * v2) for normal distr of guides/well
 c2 - well exclusion (0.025 * v1)
 
 """
+
+
 v1=150
 v2=100
 v3=0.4
@@ -26,7 +29,7 @@ import numpy as np
 import itertools as it
 
 
-def combCovEstim (v1, v2, v3, v4, c1 = 0.15, c2 = 0.025):
+def combCovEstim (v1, v2, v3, v4, c1=0.15, c2=0.025):
 
     # make sensing matrix
 
@@ -35,12 +38,16 @@ def combCovEstim (v1, v2, v3, v4, c1 = 0.15, c2 = 0.025):
     for index_pos, row in A.iterrows():
 
         # model number of sgRNA/well
-        sizeSamp = round(np.random.normal(loc = round(v3 * v1), scale = round(v1 * v3 * c1)))
+        sizeSamp = round(np.random.normal(loc=round(v3 * v1), scale=round(v1 * v3 * c1)))
 
-        colsFill = np.random.choice(a = v1, size = abs(sizeSamp), replace = True)
+        colsFill = np.random.choice(a=v1, size=abs(sizeSamp), replace=True)
 
         # fill with 1
         A.iloc[index_pos, colsFill] = 1
+
+    # exclude some "wells" of the array
+    wellNumbEx = np.random.choice(a=v2, size=round(v2 * c2), replace=False)
+    A = A.drop(index=wellNumbEx)
 
 
     # mark all possible combinations in each well
@@ -49,11 +56,11 @@ def combCovEstim (v1, v2, v3, v4, c1 = 0.15, c2 = 0.025):
     for index_comb, row in A.iterrows():
 
         # define gene "IDs" with in the well
-        geneIdWell = A.columns[A.iloc[index_comb,] == 1]
+        geneIdWell = A.columns[A.iloc[index_comb, ] == 1]
 
-        combDF = pd.DataFrame(list(it.combinations(geneIdWell,v4)))
+        combDF = pd.DataFrame(list(it.combinations(geneIdWell, v4)))
 
-        res = res.append(combDF, ignore_index = True)
+        res = res.append(combDF, ignore_index=True)
 
 
     # sort every row in place
