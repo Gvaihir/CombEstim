@@ -17,8 +17,8 @@ c2 - well exclusion (0.025 * v1)
 """
 
 
-v1=150
-v2=100
+v1=100
+v2=50
 v3=0.4
 v4=6
 
@@ -27,6 +27,13 @@ v4=6
 import pandas as pd
 import numpy as np
 import itertools as it
+import math
+from tqdm import tqdm
+
+# calculate number of combinations
+def nCr(n,r):
+    f = math.factorial
+    return f(n) // f(r) // f(n-r)
 
 
 def combCovEstim (v1, v2, v3, v4, c1=0.15, c2=0.025):
@@ -56,12 +63,14 @@ def combCovEstim (v1, v2, v3, v4, c1=0.15, c2=0.025):
     for index_comb, row in A.iterrows():
 
         # define gene "IDs" with in the well
-        geneIdWell = A.columns[A.iloc[index_comb, ] == 1]
+        geneIdWell = A.columns[A.loc[index_comb, ] == 1]
 
         combDF = pd.DataFrame(list(it.combinations(geneIdWell, v4)))
 
         res = res.append(combDF, ignore_index=True)
 
+        # print index
+        print(index_comb)
 
     # sort every row in place
     res.values.sort(axis=1)
@@ -72,4 +81,46 @@ def combCovEstim (v1, v2, v3, v4, c1=0.15, c2=0.025):
     # return number of unique combinations
 
     return res.shape[0]
+
+
+### Simulation for array of variables
+
+if __name__ == "__main__":
+
+v1_vect = np.linspace(50,250,5).astype(int)
+v2_vect = np.linspace(48,192,4).astype(int)
+v3_vect = np.linspace(0.25,0.75,3)
+v4_vect = np.linspace(3,7,5).astype(int)
+v5 = 10
+
+
+for v4 in v4_vect:
+    for v1 in v1_vect:
+
+
+        for v3 in v3_vect:
+            for v2 in v2_vect:
+
+                # list for results from iterations
+                list_for_mean = [0]*v5
+
+                # repeat v5 times
+                for i in range(v5):
+
+                    coverage = combCovEstim(v1=250, v2, v3, v4, c1=0.15, c2=0.025)
+
+                    # total number
+                    total_Nr = nCr(n=v1, r=v4)
+
+                    # export proportion
+                    list_for_mean[i] = coverage / total_Nr
+
+                results = np.mean(list_for_mean[i])
+
+
+
+
+
+
+
 
