@@ -28,6 +28,11 @@ import pandas as pd
 import numpy as np
 import itertools as it
 import math
+
+# Help message
+import argparse
+from argparse import RawTextHelpFormatter
+
 from tqdm import tqdm
 
 # calculate number of combinations
@@ -87,37 +92,40 @@ def combCovEstim (v1, v2, v3, v4, c1=0.15, c2=0.025):
 
 if __name__ == "__main__":
 
-v1_vect = np.linspace(50,250,5).astype(int)
-v2_vect = np.linspace(48,192,4).astype(int)
-v3_vect = np.linspace(0.25,0.75,3)
-v4_vect = np.linspace(3,7,5).astype(int)
-v5 = 10
+    v1_vect = np.linspace(50, 250, 5).astype(int)
+    v2_vect = np.linspace(48, 192, 4).astype(int)
+    v3_vect = np.linspace(0.25, 0.75, 3)
+    v4_vect = np.linspace(3, 7, 5).astype(int)
+    v5 = 10
 
+    for v4 in v4_vect:
 
-for v4 in v4_vect:
-    for v1 in v1_vect:
+        # create output dataFrame
+        out_df = pd.DataFrame(np.zeros(shape=(len(v3_vect), len(v2_vect))))
 
+        # total number
+        total_Nr = nCr(n=v1, r=v4)
 
         for v3 in v3_vect:
             for v2 in v2_vect:
 
                 # list for results from iterations
-                list_for_mean = [0]*v5
+                list_for_mean = [0] * v5
 
                 # repeat v5 times
                 for i in range(v5):
-
-                    coverage = combCovEstim(v1=250, v2, v3, v4, c1=0.15, c2=0.025)
-
-                    # total number
-                    total_Nr = nCr(n=v1, r=v4)
+                    coverage = combCovEstim(v1=250, v2=v2, v3=v3, v4=v4, c1=0.15, c2=0.025)
 
                     # export proportion
                     list_for_mean[i] = coverage / total_Nr
 
-                results = np.mean(list_for_mean[i])
+                    #
 
+                out_df.iloc[np.where(v3_vect == v3)[0], np.where(v2_vect == v2)[0]] = np.mean(list_for_mean[i])
 
+        out_df.to_csv(
+            path_or_buf="/Users/ogorodnikov/Box Sync/Ogorodnikov/LabNoteBook/05_tracer/Dry/oak180813_tracer0001_TdTtest"
+                        "/Results/combns/" + str(v4) + ".txt", sep='\t', header=False, index=False)
 
 
 
