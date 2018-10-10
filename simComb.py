@@ -16,14 +16,6 @@ c2 - well exclusion (0.025 * v1)
 
 """
 
-
-v1=100
-v2=50
-v3=0.4
-v4=6
-
-
-
 import pandas as pd
 import numpy as np
 import itertools as it
@@ -33,7 +25,7 @@ import math
 import argparse
 from argparse import RawTextHelpFormatter
 
-from tqdm import tqdm
+#from tqdm import tqdm
 
 # calculate number of combinations
 def nCr(n,r):
@@ -58,7 +50,7 @@ def combCovEstim (v1, v2, v3, v4, c1=0.15, c2=0.025):
         A.iloc[index_pos, colsFill] = 1
 
     # exclude some "wells" of the array
-    wellNumbEx = np.random.choice(a=v2, size=round(v2 * c2), replace=False)
+    wellNumbEx = np.random.choice(a=v2, size=round(v2 * c2).astype(int), replace=False)
     A = A.drop(index=wellNumbEx)
 
 
@@ -96,6 +88,7 @@ if __name__ == "__main__":
     v2_vect = np.linspace(48, 192, 4).astype(int)
     v3_vect = np.linspace(0.25, 0.75, 3)
     v4_vect = np.linspace(3, 7, 5).astype(int)
+    v1=250
     v5 = 10
 
     for v4 in v4_vect:
@@ -123,9 +116,8 @@ if __name__ == "__main__":
 
                 out_df.iloc[np.where(v3_vect == v3)[0], np.where(v2_vect == v2)[0]] = np.mean(list_for_mean[i])
 
-        out_df.to_csv(
-            path_or_buf="/Users/ogorodnikov/Box Sync/Ogorodnikov/LabNoteBook/05_tracer/Dry/oak180813_tracer0001_TdTtest"
-                        "/Results/combns/" + str(v4) + ".txt", sep='\t', header=False, index=False)
+        out_df.to_csv(path_or_buf="/Users/ogorodnikov/Box Sync/Ogorodnikov/LabNoteBook/05_tracer/Dry/oak180813"
+                                  "_tracer0001_TdTtest/Results/combns/" + str(v4) + ".txt", sep='\t', header=False, index=False)
 
 
 
