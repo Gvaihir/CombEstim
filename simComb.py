@@ -116,8 +116,8 @@ if __name__ == "__main__":
 
                 out_df.iloc[np.where(v3_vect == v3)[0], np.where(v2_vect == v2)[0]] = np.mean(list_for_mean[i])
 
-        out_df.to_csv(path_or_buf="/Users/ogorodnikov/Box Sync/Ogorodnikov/LabNoteBook/05_tracer/Dry/oak180813"
-                                  "_tracer0001_TdTtest/Results/combns/" + str(v4) + ".txt", sep='\t', header=False, index=False)
+        out_df.to_csv(path_or_buf="/Users/antonogorodnikov/Documents/Work/Homework/"
+                                  "sudoku/Results/comb" + str(v4) + ".txt", sep='\t', header=False, index=False)
 
 
 
