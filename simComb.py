@@ -21,11 +21,6 @@ import numpy as np
 import itertools as it
 import math
 
-# Help message
-import argparse
-from argparse import RawTextHelpFormatter
-
-#from tqdm import tqdm
 
 # calculate number of combinations
 def nCr(n,r):
@@ -102,12 +97,13 @@ if __name__ == "__main__":
         for v3 in v3_vect:
             for v2 in v2_vect:
 
+
                 # list for results from iterations
                 list_for_mean = [0] * v5
 
                 # repeat v5 times
                 for i in range(v5):
-                    coverage = combCovEstim(v1=250, v2=v2, v3=v3, v4=v4, c1=0.15, c2=0.025)
+                    coverage = combCovEstim(v1=100, v2=v2, v3=v3, v4=v4, c1=0.15, c2=0.025)
 
                     # export proportion
                     list_for_mean[i] = coverage / total_Nr
@@ -115,12 +111,7 @@ if __name__ == "__main__":
                     #
 
                 out_df.iloc[np.where(v3_vect == v3)[0], np.where(v2_vect == v2)[0]] = np.mean(list_for_mean[i])
-
-        out_df.to_csv(path_or_buf="/home/anton/02_PhenoSudoku/oak180823_sudoku0014_PathwaySudokuModel/results"
-                                  + str(v4) + ".txt", sep='\t', header=False, index=False)
-
-
-
-
+                out_df.to_csv("/home/anton/02_PhenoSudoku/oak180823_sudoku0014_PathwaySudokuModel/results/"
+                              + str(v4) + ".txt", sep='\t', header=False, index=False)
 
 
