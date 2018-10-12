@@ -83,7 +83,7 @@ if __name__ == "__main__":
     v2_vect = np.linspace(48, 192, 4).astype(int)
     v3_vect = np.linspace(0.25, 0.75, 3)
     v4_vect = np.linspace(3, 7, 5).astype(int)
-    v1=250
+    v1=100
     v5 = 10
 
     for v4 in v4_vect:
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
                 # repeat v5 times
                 for i in range(v5):
-                    coverage = combCovEstim(v1=100, v2=v2, v3=v3, v4=v4, c1=0.15, c2=0.025)
+                    coverage = combCovEstim(v1=v1, v2=v2, v3=v3, v4=v4, c1=0.15, c2=0.025)
 
                     # export proportion
                     list_for_mean[i] = coverage / total_Nr
